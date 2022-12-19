@@ -1,3 +1,4 @@
+import 'package:fakeapp/features/home/view/home_view.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -6,14 +7,13 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+  final String title = 'Fake Store';
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Container(),
+      title: title,
+      theme: ThemeData.dark(),
+      home: const HomeView(),
     );
   }
 }
