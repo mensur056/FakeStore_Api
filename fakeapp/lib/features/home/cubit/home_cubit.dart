@@ -7,16 +7,29 @@ part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit(this.homeService) : super(const HomeState()) {
-    Future.microtask(() => fetchAllItem());
+    Future.microtask(() => fetchCatagoryItems());
+    Future.microtask(() => fetchAllItems());
   }
 
   final IHomeService homeService;
 
-  Future<void> fetchAllItem() async {
+  Future<void> fetchItem() async {
     _changeLoading();
-    final response = await homeService.fetchAllItem();
+    final response = await homeService.fetchItem();
     emit(state.copyWith(items: response ?? []));
     _changeLoading();
+  }
+
+  Future<void> fetchAllItems() async {
+    _changeLoading();
+    final response = await homeService.fetchiAllItems();
+    emit(state.copyWith(items: response ?? []));
+    _changeLoading();
+  }
+
+  Future<void> fetchCatagoryItems() async {
+    final response = await homeService.fetchCatagoryItems();
+    emit(state.copyWith(categories: response));
   }
 
   void _changeLoading() {

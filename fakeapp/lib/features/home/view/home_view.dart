@@ -1,8 +1,8 @@
 import 'package:fakeapp/features/home/cubit/home_cubit.dart';
 import 'package:fakeapp/features/home/service/home_service.dart';
 import 'package:fakeapp/product/network/product_network_manager.dart';
-import 'package:fakeapp/product/utility/project_network_image.dart';
 import 'package:fakeapp/product/widget/loading_indicator.dart';
+import 'package:fakeapp/product/widget/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kartal/kartal.dart';
@@ -20,7 +20,27 @@ class HomeView extends StatelessWidget {
         appBar: AppBar(
           leading: _loadingIndicator(),
         ),
-        body: _bodyListView(),
+        body: Column(
+          children: [
+            Expanded(
+              flex: 1,
+              child: BlocBuilder<HomeCubit, HomeState>(
+                builder: (context, state) {
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: state.categories?.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        child: Text(state.categories?[index] ?? ''),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+            Expanded(flex: 8, child: _bodyListView()),
+          ],
+        ),
       ),
     );
   }
@@ -29,18 +49,8 @@ class HomeView extends StatelessWidget {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
         return ListView.builder(
-          itemCount: state.items?.length ?? 0,
-          itemBuilder: (BuildContext context, int index) {
-            final item = state.items?[index];
-            if (item == null) {
-              return const SizedBox();
-            }
-            return ListTile(
-              title: ProjectNetworkImage.network(src: item.image),
-              subtitle: Text(item.price.toString()),
-            );
-          },
-        );
+            itemCount: state.items?.length ?? 0,
+            itemBuilder: (BuildContext context, int index) => ProductCard(model: state.items?[index]));
       },
     );
   }
