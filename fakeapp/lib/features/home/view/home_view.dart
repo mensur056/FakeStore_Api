@@ -3,12 +3,33 @@ import 'package:fakeapp/features/home/service/home_service.dart';
 import 'package:fakeapp/product/network/product_network_manager.dart';
 import 'package:fakeapp/product/widget/loading_indicator.dart';
 import 'package:fakeapp/product/widget/product_card.dart';
+import 'package:fakeapp/product/widget/product_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kartal/kartal.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  final _scrollController = ScrollController();
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels > 300) {}
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,30 +39,23 @@ class HomeView extends StatelessWidget {
       ),
       child: Scaffold(
         appBar: AppBar(
-          leading: _loadingIndicator(),
+          centerTitle: false,
+          title: _dropdownMenu(),
+          actions: [_loadingIndicator()],
         ),
-        body: Column(
-          children: [
-            Expanded(
-              flex: 1,
-              child: BlocBuilder<HomeCubit, HomeState>(
-                builder: (context, state) {
-                  return ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: state.categories?.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        child: Text(state.categories?[index] ?? ''),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-            Expanded(flex: 8, child: _bodyListView()),
-          ],
-        ),
+        body: _bodyListView(),
       ),
+    );
+  }
+
+  Widget _dropdownMenu() {
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (context, state) {
+        return ProductDropdown(
+          items: state.categories ?? [],
+          onSelected: (String data) {},
+        );
+      },
     );
   }
 

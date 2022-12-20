@@ -7,8 +7,7 @@ part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit(this.homeService) : super(const HomeState()) {
-    Future.microtask(() => fetchCatagoryItems());
-    Future.microtask(() => fetchAllItems());
+    Future.wait([fetchAllItems(), fetchCatagoryItems()]);
   }
 
   final IHomeService homeService;
