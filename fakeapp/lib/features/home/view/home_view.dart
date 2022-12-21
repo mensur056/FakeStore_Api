@@ -66,7 +66,20 @@ class _HomeViewState extends State<HomeView> {
       builder: (context, state) {
         return ListView.builder(
             itemCount: state.selectedItems?.length ?? 0,
-            itemBuilder: (BuildContext context, int index) => ProductCard(model: state.selectedItems?[index]));
+            itemBuilder: (BuildContext context, int index) => Column(
+                  children: [
+                    ProductCard(model: state.selectedItems?[index]),
+                    TextButton(
+                      onPressed: () {
+                        context.read<HomeCubit>().updateList(index, state.selectedItems?[index]);
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [Text('${state.selectedItems?[index].price}'), const Icon(Icons.add)],
+                      ),
+                    )
+                  ],
+                ));
       },
     );
   }

@@ -20,6 +20,16 @@ class HomeCubit extends Cubit<HomeState> {
     emit(state.copyWith(selectedItems: state.items?.where((element) => element.category == data).toList()));
   }
 
+  void updateList(int index, ProductModel? model) {
+    if (model != null) {
+      emit(state.copyWith(isUpdate: false));
+      model.price = (model.price ?? 0) + 200;
+      final list = state.items;
+      list?[index] = model;
+      emit(state.copyWith(items: list, isUpdate: true));
+    }
+  }
+
   Future<void> fetchItem() async {
     _changeLoading();
     final response = await homeService.fetchItem();
