@@ -53,7 +53,9 @@ class _HomeViewState extends State<HomeView> {
       builder: (context, state) {
         return ProductDropdown(
           items: state.categories ?? [],
-          onSelected: (String data) {},
+          onSelected: (String data) {
+            context.read<HomeCubit>().selectedCategories(data);
+          },
         );
       },
     );
@@ -63,8 +65,8 @@ class _HomeViewState extends State<HomeView> {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
         return ListView.builder(
-            itemCount: state.items?.length ?? 0,
-            itemBuilder: (BuildContext context, int index) => ProductCard(model: state.items?[index]));
+            itemCount: state.selectedItems?.length ?? 0,
+            itemBuilder: (BuildContext context, int index) => ProductCard(model: state.selectedItems?[index]));
       },
     );
   }

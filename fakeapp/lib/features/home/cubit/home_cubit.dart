@@ -7,10 +7,18 @@ part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit(this.homeService) : super(const HomeState()) {
-    Future.wait([fetchAllItems(), fetchCatagoryItems()]);
+    initalComplete();
+  }
+  Future<void> initalComplete() async {
+    await Future.wait([fetchAllItems(), fetchCatagoryItems()]);
+    emit(state.copyWith(selectedItems: state.items));
   }
 
   final IHomeService homeService;
+
+  void selectedCategories(String data) {
+    emit(state.copyWith(selectedItems: state.items?.where((element) => element.category == data).toList()));
+  }
 
   Future<void> fetchItem() async {
     _changeLoading();
